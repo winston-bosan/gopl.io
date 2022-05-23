@@ -32,12 +32,22 @@ func fetch(url string) (filename string, n int64, err error) {
 	if err != nil {
 		return "", 0, err
 	}
+
+	defer close_file(f, &err)
+
 	n, err = io.Copy(f, resp.Body)
 	// Close file, but prefer error from Copy, if any.
-	if closeErr := f.Close(); err == nil {
-		err = closeErr
-	}
+	// if closeErr := f.Close(); err == nil {
+	// 	err = closeErr
+	// }
 	return local, n, err
+}
+
+func close_file(f *os.File, err *error) {
+	file_error := f.Close()
+	if err == nil { 
+		err = &file_error
+	}
 }
 
 //!-

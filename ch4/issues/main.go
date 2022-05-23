@@ -11,20 +11,46 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
+	"time"
 
 	"gopl.io/ch4/github"
 )
 
 //!+
 func main() {
+
 	result, err := github.SearchIssues(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%d issues:\n", result.TotalCount)
+	issues := result.Items
+
+	sort.SliceStable(issues, func(i, j int) bool {
+		return issues[i].CreatedAt.After(issues[j].CreatedAt)
+	})
+
+	var printed_month, printed_year, printed_after_year bool
+	one_month_ago := time.Now().AddDate(0,-1,0)
+	one_year_ago := time.Now().AddDate(-1,0,0)
 	for _, item := range result.Items {
+		// Print the age category
+		switch  {
+		case item.CreatedAt.After(one_month_ago) && !printed_month:
+			fmt.Println("Less than a month ago...:")
+			printed_month = true
+		case item.CreatedAt.After(one_year_ago) && item.CreatedAt.Before(one_month_ago) && !printed_year:
+			fmt.Println("Less than a year ago...")
+			printed_year = true
+		case item.CreatedAt.Before(one_year_ago) && printed_year && !printed_after_year:
+			fmt.Println("More than a year ago...")
+			printed_after_year = true
+		}
+
 		fmt.Printf("#%-5d %9.9s %.55s\n",
 			item.Number, item.User.Login, item.Title)
+		fmt.Println(item.CreatedAt)
 	}
 }
 

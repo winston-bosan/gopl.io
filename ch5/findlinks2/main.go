@@ -49,7 +49,7 @@ func main() {
 
 // findLinks performs an HTTP GET request for url, parses the
 // response as HTML, and extracts and returns the links.
-func findLinks(url string) ([]string, error) {
+func FindLinks(url string) ([]string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -64,6 +64,24 @@ func findLinks(url string) ([]string, error) {
 		return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 	}
 	return visit(nil, doc), nil
+}
+
+// CountWordsAndImages does an HTTP GET request for the HTML
+// document url and returns the number of words and images in it.
+func CountWordsAndImages(url string) (words, images int, err error) {
+    resp, err := http.Get(url)
+    if err != nil {
+        return
+    }
+
+    doc, err := html.Parse(resp.Body)
+    resp.Body.Close()
+    if err != nil {
+        err = fmt.Errorf("parsing HTML: %s", err)
+        return
+    }
+    words, images = CountWordsAndImages(doc)
+    return
 }
 
 //!-

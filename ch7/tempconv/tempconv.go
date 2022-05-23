@@ -17,6 +17,9 @@ type Fahrenheit float64
 func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9.0/5.0 + 32.0) }
 func FToC(f Fahrenheit) Celsius { return Celsius((f - 32.0) * 5.0 / 9.0) }
 
+// Exercise 7.7 => 
+// Because when the celcius embeded type is printed, the String() method
+// returns with the C
 func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }
 
 /*
@@ -40,12 +43,15 @@ func (f *celsiusFlag) Set(s string) error {
 	var value float64
 	fmt.Sscanf(s, "%f%s", &value, &unit) // no error check needed
 	switch unit {
-	case "C", "°C":
-		f.Celsius = Celsius(value)
-		return nil
-	case "F", "°F":
-		f.Celsius = FToC(Fahrenheit(value))
-		return nil
+		case "C", "°C":
+			f.Celsius = Celsius(value)
+			return nil
+		case "F", "°F":
+			f.Celsius = FToC(Fahrenheit(value))
+			return nil
+		case "K", "°K":
+			f.Celsius = Celsius(value - 273.15)
+			return nil
 	}
 	return fmt.Errorf("invalid temperature %q", s)
 }

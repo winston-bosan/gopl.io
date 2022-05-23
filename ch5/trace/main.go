@@ -19,7 +19,7 @@ func bigSlowOperation() {
 }
 
 func trace(msg string) func() {
-	start := time.Now()
+	start := time.Now() // Heyyy scoppeddddd
 	log.Printf("enter %s", msg)
 	return func() { log.Printf("exit %s (%s)", msg, time.Since(start)) }
 }

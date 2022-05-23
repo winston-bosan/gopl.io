@@ -30,16 +30,38 @@ func main() {
 //!+visit
 // visit appends to links each link found in n and returns the result.
 func visit(links []string, n *html.Node) []string {
-	if n.Type == html.ElementNode && n.Data == "a" {
-		for _, a := range n.Attr {
-			if a.Key == "href" {
-				links = append(links, a.Val)
+
+	is_script_img := n.Data == "script" || n.Data == "img"
+
+	if n.Type == html.ElementNode {
+		if n.Data == "a" || n.Data == "link" {
+			for _, a := range n.Attr {
+				if a.Key == "href" {
+					links = append(links, a.Val)
+				}
+			}
+		} else if is_script_img {
+			for _, a := range n.Attr {
+				if a.Key == "src" {
+					links = append(links, "https://go.dev" + a.Val)
+				}
 			}
 		}
 	}
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
+
+	c := n.FirstChild
+	// x := c.NextSibling
+	if c != nil{
 		links = visit(links, c)
 	}
+	n_c := n.NextSibling
+	if n_c != nil {
+		links = visit(links, n_c)
+	}
+	// for c := n.FirstChild; c != nil; c = c.NextSibling {
+	// 	fmt.Println(c)
+	// 	links = visit(links, c)
+	// }
 	return links
 }
 

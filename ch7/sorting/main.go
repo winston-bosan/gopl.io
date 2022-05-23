@@ -165,3 +165,5 @@ func init() {
 	fmt.Println(sort.IntsAreSorted(values)) // "false"
 	//!-ints
 }
+
+//https://docs.google.com/forms/d/e/1FAIpQLScQTflvP3Jkx6YEPbOjkUFB44fC6k_iQwp7yM6JlPCrgDgAyg/formResponse?usp=pp_url&entry.1718879321=2022-04-20&entry.846307652=Went+to+a+new+lounge+and+sat+there+nonchalantly+for+a+while&entry.650600432=1&submit=Submit

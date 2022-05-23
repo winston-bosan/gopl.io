@@ -6,10 +6,30 @@
 // Package treesort provides insertion sort using an unbalanced binary tree.
 package treesort
 
+import "strconv"
+
 //!+
 type tree struct {
 	value       int
 	left, right *tree
+}
+
+type call_func func(int)
+func traverse(call call_func, t *tree) {
+	call(t.value)
+
+	if t.left != nil {traverse(call, t.left)}
+	if t.right != nil {traverse(call, t.right)}
+}
+
+
+
+func (t *tree) String() string {
+	string_holder := ""
+	traverse(func(hold int){
+		string_holder += strconv.Itoa(hold)
+	}, t)
+	return string_holder
 }
 
 // Sort sorts values in place.
